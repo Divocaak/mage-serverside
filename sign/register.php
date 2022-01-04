@@ -2,16 +2,9 @@
 require_once "../config.php";
 
 $e = "";
-$sql = "SELECT id FROM players WHERE username = " . $_POST["username"];
-if (mysqli_query($link, $sql)) {
-    $e = "Username already taken";
-}
-
-if ($e == "") {
-    $sql = "INSERT INTO players (username, password, level) VALUES ('" . $_POST["username"] . "', '" . $passHash . "', 1)";
-    if (!mysqli_query($link, $sql)) {
-        $e = "Error: " . $sql . " - " . mysqli_error($link);
-    }
+$sql = "INSERT INTO players (username, password, level) VALUES ('" . $_POST["username"] . "', '" . password_hash($_POST["password"], PASSWORD_DEFAULT) . "', 1)";
+if (!mysqli_query($link, $sql)) {
+    $e = "Username taken";
 }
 
 if ($e == "") {
@@ -28,11 +21,9 @@ if ($e == "") {
     if (!mysqli_query($link, $sql)) {
         $e = "Error: " . $sql . " - " . mysqli_error($link);
     } else {
-        echo "Registration was successfully completed!";
+        $e = "Registration was successfully completed!";
     }
-} else {
-    echo $e;
 }
+echo $e;
 
 mysqli_close($link);
-?>
